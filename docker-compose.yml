@@ -1,0 +1,69 @@
+version: '3'
+services:
+
+  # PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tsant/inventory-php
+    container_name: inventory_php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www
+    networks:
+      - inventory-network
+
+  # Nginx Service
+  webapp:
+    image: nginx:alpine
+    container_name: inventory_webapp
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - inventory-network
+
+  # MySQL Service
+  db:
+    image: mysql:5.7.22
+    container_name: inventory_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: inventory
+      MYSQL_ROOT_PASSWORD: aStrongPassword
+      MYSQL_USER: laraveluser
+      MYSQL_PASSWORD: aStrongPassword
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - inventory-network
+
+#Docker Networks
+networks:
+  inventory-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
