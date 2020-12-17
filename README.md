@@ -1,7 +1,7 @@
 ### Linux Installation
 - git clone https://github.com/thalysantana/inventory.git
 - cd inventory
-- composer install --no-dev
+- composer install
 - docker-compose up --build
 
 - Access http://localhost
