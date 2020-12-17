@@ -1,10 +1,12 @@
 ### Linux Installation
-- git clone https://github.com/thalysantana/inventory.git
-- cd inventory
-- composer install
-- docker-compose up --build
-
-- Access http://localhost
+```
+git clone https://github.com/thalysantana/inventory.git
+cd inventory
+composer install
+docker-compose up --build
+```
+### Access
+- Open http://localhost on your browser
 
 ### Test execution
 docker-compose exec -T app php artisan test
